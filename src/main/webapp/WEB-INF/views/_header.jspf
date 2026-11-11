@@ -1,0 +1,109 @@
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page import="com.placementplanner.model.Student" %>
+<%
+    Student loggedInStudent = (Student) session.getAttribute("student");
+    String currentPath = request.getServletPath();
+    String contextPath = request.getContextPath();
+%>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Placement Planner</title>
+
+    <!-- Pre-render theme application script to eliminate theme flashing -->
+    <script>
+        (function() {
+            try {
+                var savedTheme = localStorage.getItem('theme');
+                var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+                var activeTheme = savedTheme ? savedTheme : (prefersDark ? 'dark' : 'light');
+                document.documentElement.setAttribute('data-theme', activeTheme);
+            } catch(e) {}
+        })();
+    </script>
+
+    <!-- Google Fonts: Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Application Design System Stylesheet -->
+    <link rel="stylesheet" href="<%= contextPath %>/assets/style.css">
+</head>
+<body>
+
+<header class="site-header">
+    <div class="header-inner">
+        <a class="brand" href="<%= contextPath %>/dashboard">
+            <div class="brand-icon">&#127891;</div>
+            <div class="brand-text">Placement Planner</div>
+        </a>
+
+        <nav class="nav-links" aria-label="Main Navigation">
+            <% if (loggedInStudent != null) { %>
+                <a href="<%= contextPath %>/dashboard" class="<%= "/dashboard".equals(currentPath) ? "active" : "" %>">
+                    Dashboard
+                </a>
+                <a href="<%= contextPath %>/jobs" class="<%= "/jobs".equals(currentPath) ? "active" : "" %>">
+                    Jobs
+                </a>
+                <a href="<%= contextPath %>/applications" class="<%= "/applications".equals(currentPath) ? "active" : "" %>">
+                    Applications
+                </a>
+                <a href="<%= contextPath %>/skills" class="<%= "/skills".equals(currentPath) ? "active" : "" %>">
+                    Skills
+                </a>
+                <a href="<%= contextPath %>/tasks" class="<%= "/tasks".equals(currentPath) ? "active" : "" %>">
+                    Tasks
+                </a>
+                <a href="<%= contextPath %>/profile" class="<%= "/profile".equals(currentPath) ? "active" : "" %>">
+                    Profile
+                </a>
+                <% if (loggedInStudent.isAdmin()) { %>
+                    <a href="<%= contextPath %>/admin/jobs" class="<%= currentPath != null && currentPath.startsWith("/admin/") ? "active" : "" %>">
+                        Manage Jobs
+                    </a>
+                <% } %>
+            <% } else { %>
+                <a href="<%= contextPath %>/jobs" class="<%= "/jobs".equals(currentPath) ? "active" : "" %>">
+                    Explore Jobs
+                </a>
+            <% } %>
+        </nav>
+
+        <div class="header-actions">
+            <!-- Light/Dark Mode Switcher -->
+            <button type="button" id="themeToggle" class="theme-toggle-btn" title="Toggle Theme" aria-label="Toggle Light/Dark Theme">
+                &#9790;
+            </button>
+
+            <% if (loggedInStudent != null) { %>
+                <a href="<%= contextPath %>/profile" class="user-profile-badge" title="View & Edit Academic Profile" style="text-decoration: none;">
+                    <div class="user-avatar">
+                        <%= (loggedInStudent.getName() != null && !loggedInStudent.getName().isBlank())
+                                ? loggedInStudent.getName().substring(0, 1).toUpperCase()
+                                : "U" %>
+                    </div>
+                    <span><%= loggedInStudent.getName() %></span>
+                    <span class="role-tag <%= loggedInStudent.isAdmin() ? "admin" : "student" %>">
+                        <%= loggedInStudent.getRole() %>
+                    </span>
+                </a>
+                <a href="<%= contextPath %>/logout" class="btn sm secondary" title="Sign out of account">
+                    Logout
+                </a>
+            <% } else { %>
+                <a href="<%= contextPath %>/login" class="btn sm secondary">
+                    Sign In
+                </a>
+                <a href="<%= contextPath %>/register" class="btn sm primary">
+                    Register
+                </a>
+            <% } %>
+        </div>
+    </div>
+</header>
+
+<main class="main-container">

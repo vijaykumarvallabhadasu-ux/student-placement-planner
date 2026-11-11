@@ -1,0 +1,17 @@
+</main>
+
+<footer class="site-footer">
+    <p>&copy; Student Placement Planner &bull; Campus Career Readiness Platform</p>
+    <div class="footer-badges">
+        <span class="footer-badge">Java 17</span>
+        <span class="footer-badge">Apache Tomcat 9</span>
+        <span class="footer-badge">Oracle Database</span>
+        <span class="footer-badge">JDBC &amp; Servlets</span>
+    </div>
+</footer>
+
+<!-- Application Scripts -->
+<script src="${pageContext.request.contextPath}/assets/app.js"></script>
+
+</body>
+</html>
